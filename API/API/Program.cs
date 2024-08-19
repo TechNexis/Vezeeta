@@ -1,5 +1,8 @@
+using API.Models;
 using API.ServicesExtension;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,7 +13,10 @@ builder.Services.AddControllers();
 
 // Register Required Services For Swagger In Extension Method
 builder.Services.AddSwaggerServices();
+builder.Services.AddDbContext<Context>(Options =>{
+    Options.UseSqlServer("Data Source=.;Initial Catalog=API;Integrated Security=True;Encrypt=False");
 
+});
 #endregion
 
 var app = builder.Build();
@@ -18,7 +24,7 @@ var app = builder.Build();
 #region Configure the Kestrel pipeline
 
 // -- Server Error Middleware (we catch it in class ExceptionMiddleware)
-app.UseMiddleware<ExceptionMiddleware>();
+//app.UseMiddleware<ExceptionMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {
